@@ -10,6 +10,6 @@ asyncio bot that parses the site of communications college 54 named after Vostru
 - convenient layout and formatting
 - automatic restart of the parser in case of failure, work in conditions of poor connection (relevant for this college)
 ## Dependencies
-    pip install aiogram aiogram-dialog beautifulsoup4 fuzzywuzzy 
+    pip install aiogram aiogram-dialog apscheduler beautifulsoup4 fuzzywuzzy 
 ## Starting
 write your token to a variable, and just start bot. On startup, the bot will automatically update its database
