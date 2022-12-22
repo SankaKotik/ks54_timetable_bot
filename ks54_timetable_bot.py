@@ -97,8 +97,12 @@ async def cancel_handler(message: Message, state: FSMContext):
 @dp.message_handler (commands=['start'])
 async def cmd_start (message: Message):
     markup = InlineKeyboardMarkup ().add (InlineKeyboardButton ("Узнать расписание", callback_data='start'))
-    await message.answer ("Бот узнающий расписание", reply_markup=markup)
+    await message.answer ("Привет! Этот бот позволяет узнать расписание для студентов и преподавателей Колледжа Связи 54. Нажми на кнопку, чтобы продолжить", reply_markup=markup)
     await Form.start.set ()
+
+@dp.message_handler (commands=['help'])
+async def cmd_start (message: Message):
+    await message.answer ('Этот бот позволяет узнать расписание для студентов и преподавателей Колледжа Связи 54. Нажимайте на предлагаемые ботом кнопки, чтобы узнать расписание на сегодня, на завтра, на неделю, для преподавателя или для студента. Имя группы и ФИО преподавателя можно вводить неточно. Ссылка на мой гитхаб: <a href="https://github.com/SankaKotik/">SankaKotik</a>', parse_mode='HTML')
 
 @dp.callback_query_handler (Text (equals=['start']), state=Form.start)
 async def process_start (call: CallbackQuery):
@@ -139,27 +143,27 @@ async def process_name (message: Message, state: FSMContext):
         role = data ['role']
         days = data ['days']
     
-    if role == 'prepod':
-        db_query = 'tcr'
-        x = 0
-    elif role == 'student':
-        x = 5
-        db_query = 'grp'
-    
-    if days == 'today':
-        query_weekdays = [weekdays [date.today().weekday()]]
-        dates = [date.today ()]
-    elif days == 'tomorrow':
-        query_weekdays = [weekdays [date.today().weekday() + 1]]
-        dates = [date.today () + timedelta(days=1)]
-    elif days == 'week':
-        theday = date.today ()
-        weekday = theday.isoweekday ()
-        start = theday - timedelta(days=weekday)
-        dates = [start + timedelta(days=d+1) for d in range(7)]
-        query_weekdays = weekdays
-    
     try:
+        if role == 'prepod':
+            db_query = 'tcr'
+            x = 0
+        elif role == 'student':
+            x = 5
+            db_query = 'grp'
+        
+        if days == 'today':
+            query_weekdays = [weekdays [date.today().weekday()]]
+            dates = [date.today ()]
+        elif days == 'tomorrow':
+            query_weekdays = [weekdays [(date.today() + timedelta (days=1)).weekday()]]
+            dates = [date.today () + timedelta(days=1)]
+        elif days == 'week':
+            theday = date.today ()
+            weekday = theday.isoweekday ()
+            start = theday - timedelta (days=weekday)
+            dates = [start + timedelta (days=d+1) for d in range(7)]
+            query_weekdays = weekdays
+        
         query_dates = [d.strftime ('%d.%m.%Y') for d in dates]
         all_names = [num [0] for num in set (list (db.execute (f'select {db_query} from timetable')) + list (db.execute (f'select {db_query} from replacements')))]
         name = process.extractOne (message.text, all_names)[0]
