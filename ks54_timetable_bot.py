@@ -70,7 +70,7 @@ async def parse_website ():
                 await parse_webpage ()
     return db
 
-weekdays = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
+weekdays = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
 
 async def update_db ():
     global db
