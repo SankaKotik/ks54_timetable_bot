@@ -101,7 +101,7 @@ async def cmd_start (message: Message):
     await Form.start.set ()
 
 @dp.message_handler (commands=['help'])
-async def cmd_start (message: Message):
+async def cmd_help (message: Message):
     await message.answer ('Этот бот позволяет узнать расписание для студентов и преподавателей Колледжа Связи 54. Нажимайте на предлагаемые ботом кнопки, чтобы узнать расписание на сегодня, на завтра, на неделю, для преподавателя или для студента. Имя группы и ФИО преподавателя можно вводить неточно. Ссылка на мой гитхаб: <a href="https://github.com/SankaKotik/">SankaKotik</a>', parse_mode='HTML')
 
 @dp.callback_query_handler (Text (equals=['start']), state=Form.start)
